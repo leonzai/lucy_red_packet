@@ -48,13 +48,16 @@ class LuckRedPacked
 
     public function handle()
     {
-        for ($i = 0; $i < $this->numberOfRedPacket; $i++) {
+		echo "测试数据：<br>";
+		for ($i = 0; $i < $this->numberOfRedPacket; $i++) {
             $index = $i + 1;
             echo "第 $index 个";
 
             echo $this->lucky($i) / 100 . "元";
             echo "<br>";
         }
+		echo " ====================================================";
+
     }
 
     public function lucky($i)
@@ -140,4 +143,8 @@ function go()
 }
 
 
+echo go();
+echo go();
+echo go();
+echo go();
 echo go();
