@@ -48,50 +48,50 @@ class LuckRedPacked
 
     public function handle()
     {
-		echo "测试数据：<br>";
-		for ($i = 0; $i < $this->numberOfRedPacket; $i++) {
+        echo "<h4>测试数据：</h4>";
+        for ($i = 0; $i < $this->numberOfRedPacket; $i++) {
             $index = $i + 1;
-            echo "第 $index 个";
-
-            echo $this->lucky($i) / 100 . "元";
-            echo "<br>";
+            echo "第 $index 个： ";
+            echo $this->lucky($i) / 100 . " 元<br>";
         }
-		echo " ====================================================";
-
+        echo "===========================================================================<br>";
     }
 
     public function lucky($i)
     {
+        // 如果是指定的人，直接返回指定的金额
         if ($i === $this->specifyIndex) {
             $this->spareMoney -= $this->specifyMoney;
-            return $this->specifyMoney; // 如果是指定的人，直接返回指定的金额
+            return $this->specifyMoney;
         }
-        if ($i === $this->numberOfRedPacket - 1) return $this->spareMoney; // 如果是最后一个，全部返回
-        $spareAmount = $this->numberOfRedPacket - $i - 1; // 除去当前的人和已经发送的人，还剩几个人 （这边的人，就是红包的数量）
+
+        // 如果是最后一个，直接返回剩余金额
+        if ($i === $this->numberOfRedPacket - 1) return $this->spareMoney;
 
 
-//         需要至少剩下 minMoney ，用来发给 $spareAmount 个人
-        if ($i > $this->specifyIndex) {
-            $minMoney = $spareAmount;
-        } else {
-            $minMoney = ($spareAmount - 1) * 1 + $this->specifyMoney;
-        }
-        /****************** 这个算法发红包很不公平，前面的人都是大红包，不予采用 start **************************/
-//        $maxMoney = $this->spareMoney - $minMoney;
-//        $lucyMoney = rand(1, $maxMoney); // $this->spareMoney - $minMoney 就是发给当前用户的最大金额
-        /****************** 这个算法发红包很不公平，前面的人都是大红包，不予采用 end **************************/
+        // 剩下几个红包
+        $spareNumberOfRedPacket = $this->numberOfRedPacket - $i;
 
 
         if ($i > $this->specifyIndex) {
             $lucyMaxMoney = $this->spareMoney;  // 计算剩余多少钱可以发放到当前用户。
-            $maxMoney = $lucyMaxMoney / ($spareAmount + 1) * 2; // 算法，用户最多中多少钱
+            $maxMoney = $lucyMaxMoney / $spareNumberOfRedPacket * 2; // 腾讯算法，用户最多中多少钱
         } else {
             $lucyMaxMoney = $this->spareMoney - $this->specifyMoney;
-            $maxMoney = $lucyMaxMoney / $spareAmount * 2; // 算法，用户最多中多少钱
+            $maxMoney = $lucyMaxMoney / ($spareNumberOfRedPacket - 1) * 2; // 腾讯算法，用户最多中多少钱
         }
 
+        // maxMoney 可能是小数
         $maxMoney = floor($maxMoney);
-        if ($maxMoney >$this->spareMoney-$minMoney) {
+
+        // 最少剩下要多少钱，才能保证其他人（不包含当前用户）都能抽到钱
+        if ($i > $this->specifyIndex) {
+            $minMoney = ($spareNumberOfRedPacket - 1) * 1;  // *1 表示一人一分钱   -1 是减去当前用户
+        } else {
+            $minMoney = ($spareNumberOfRedPacket - 1 - 1) * 1 + $this->specifyMoney; // -1 -1 是减去当前用户和指定用户
+        }
+
+        if ($maxMoney > $this->spareMoney - $minMoney) {
             $maxMoney = $this->spareMoney - $minMoney;
         }
 
