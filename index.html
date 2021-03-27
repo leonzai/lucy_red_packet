@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form id="oreoDataAddForm" action="" method="post">
+    <div>
+        <label>红包金额</label>
+        <input name="money" id="money">
+    </div><br>
+
+    <div>
+        <label>红包数量</label>
+        <input name="num" id="num">
+    </div><br>
+
+    <div>
+        <label>红包控制</label>
+        <select name="hbkz" id="hbkz">
+            <option value="1">开启</option>
+            <option value="0">关闭</option>
+        </select>
+    </div><br>
+
+    <div>
+        <label>命中位置</label>
+        <input name="position" id="position">
+    </div><br>
+
+    <div>
+        <label>命中金额</label>
+        <input name="amount" id="amount">
+    </div><br>
+
+<button  onclick="test()" type="button">提交</button>
+</form>
+<div>
+    <ul class="ul_txt" id="noticeContent" name="noticeContent"> </ul>
+</div>
+<script type="text/javascript"src="http://code.jquery.com/jquery-1.4.1.js"></script>
+<script>
+    function test(){
+        $.ajax({
+            type: "POST",
+            url:'./test.php',
+            data: $('#oreoDataAddForm').serialize(),
+            dataType : "html",
+            cache:false,
+            success : function(res) {
+                a();
+                $("#noticeContent").append(res);
+            }
+        });
+    }
+
+    function a(){
+        $("#noticeContent").empty();
+    }
+</script>
+</body>
+</html>
